@@ -1,7 +1,6 @@
-import toast from "react-hot-toast/headless";
+import toast from "react-hot-toast";
 
 const Toast = ({ type, message }: any) => {
-  console.log(type, message);
   return type === "success"
     ? toast.success(message)
     : type === "error"
