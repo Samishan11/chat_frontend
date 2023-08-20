@@ -1,8 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useRegisterMutation } from "../../service/auth";
+
+type IUser = {
+  username: string;
+  fullname: string;
+  email: string;
+  password: string;
+};
 const Register = () => {
   const { register, handleSubmit } = useForm();
+  const registeruser = useRegisterMutation();
+  const submit = (data: IUser) => {
+    registeruser.mutate(data);
+  };
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -23,7 +35,7 @@ const Register = () => {
               Sign up to your account
             </h1>
             <form
-              onSubmit={handleSubmit}
+              onSubmit={handleSubmit(submit)}
               className="space-y-4 md:space-y-6"
               action="#"
             >
