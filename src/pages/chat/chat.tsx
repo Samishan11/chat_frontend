@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "./components/sidebar";
 import { useForm } from "react-hook-form";
 import { useSocket } from "../../context/socket";
 import { getToken } from "../../service/token";
 import { useRoomQuery } from "../../service/room";
+import { useListChat } from "../../service/chat";
+// import { UseScrollToBottom } from "../../hooks/useScrollToBottom";
 
 const Chat = () => {
   const socket = useSocket();
   const auth = getToken();
+  const bottomRef = useRef(null);
 
   const [data, setData] = useState();
   const [room, setRoom] = useState();
@@ -15,23 +18,39 @@ const Chat = () => {
 
   const { register, watch, reset } = useForm();
   const users = [auth?._id, data?._id];
+
+  //  react query
   const { data: _room, isLoading } = useRoomQuery(users);
+  console.log(_room);
+  const { data: chat, isLoading: isLoadingChat } = useListChat(
+    _room?._id ?? room
+  );
+  console.log(chat);
+
+  // set chat list
+  useEffect(() => {
+    if (isLoadingChat) return;
+    setMessages(chat);
+  }, [isLoadingChat, chat]);
+
+  //  set room id
   useEffect(() => {
     if (isLoading) return;
     setRoom(_room?._id);
   }, [isLoading, _room]);
 
+  //  method set receiver info
   const handleUser = (data) => {
     setData(data);
   };
 
+  // event join room
   useEffect(() => {
-    if (room) {
-      console.log(room);
-      socket.emit("join_room", room);
-    }
-  }, [room]);
+    if (!room) return;
+    socket.emit("join_room", room);
+  }, [room, socket]);
 
+  // send message
   const sendMessage = () => {
     const chat = watch().message;
     const chatData = {
@@ -48,11 +67,17 @@ const Chat = () => {
         data: { ...chatData, roomId: room },
       });
     }
-
-    reset("");
+    reset({ message: "" });
     setMessages((prev) => [...prev, chatData]);
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      sendMessage();
+    }
+  };
+
+  //  get messsage
   useEffect(() => {
     if (!socket) return;
     socket.off("message").on("message", (data) => {
@@ -60,13 +85,18 @@ const Chat = () => {
     });
   }, [socket]);
 
+  useEffect(() => {
+    console.log(bottomRef.current);
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <>
       <div className="flex h-screen antialiased text-gray-800">
         <div className="flex flex-row h-full w-full overflow-x-hidden">
           <Sidebar click={handleUser} />
           <div className="flex  flex-col flex-auto h-full p-6">
-            {data ? (
+            {chat && messages?.length > 0 && _room ? (
               <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
                 <div className="flex flex-col h-full overflow-x-auto mb-4">
                   <div className="flex flex-col h-full">
@@ -132,6 +162,7 @@ const Chat = () => {
                   </div>
                   <div className="ml-4">
                     <button
+                      onKeyDown={handleKeyDown}
                       onClick={sendMessage}
                       className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
                     >
@@ -155,6 +186,7 @@ const Chat = () => {
                     </button>
                   </div>
                 </div>
+                <div ref={bottomRef} />
               </div>
             ) : (
               <div className="flex justify-center items-center h-full">
