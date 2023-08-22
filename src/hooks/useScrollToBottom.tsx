@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 
-const UseScrollToBottom = ({ bottomRef, message }: any) => {
+const useScrollToBottom = ({ ref, messages }: any) => {
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [bottomRef, message]);
+    if (messages?.length === 0) return;
+    ref.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [messages, ref]);
 };
 
-export { UseScrollToBottom };
+export { useScrollToBottom };

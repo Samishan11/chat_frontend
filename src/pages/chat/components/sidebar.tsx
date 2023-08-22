@@ -39,9 +39,13 @@ const Sidebar = ({ click }: any) => {
     socket.on("onlineUsers", (data: any) => {
       // const myId = data.find((id: any) => id === auth._id);
       // setOnlineUser(myId);
+      console.log(data);
       setIsOnline(data);
     });
-  }, [socket, auth]);
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket]);
 
   //  handle open tab
   const handelTabs = (tab: string) => {
@@ -99,18 +103,13 @@ const Sidebar = ({ click }: any) => {
           {tab === "active" && (
             <div className="flex flex-col space-y-1 mt-4 -mx-2 h-screen overflow-y-auto">
               {!isLoadingFriend &&
+                friend?.length > 0 &&
                 friend?.map((user: any, ind: number) => {
                   return (
                     <button
                       key={ind}
-                      onClick={() =>
-                        click(
-                          user?.requestBy === auth?._id
-                            ? user?.requestTo
-                            : user?.requestBy
-                        )
-                      }
-                      className="flex flex-row items-center bg-gray-100 hover:bg-gray-200 rounded-xl p-2"
+                      onClick={() => click(user)}
+                      className="flex flex-row items-center mb-2 bg-gray-100 hover:bg-gray-200 rounded-xl p-2"
                     >
                       <div className="flex relative items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
                         {user?.requestBy?._id === auth?._id
@@ -134,6 +133,11 @@ const Sidebar = ({ click }: any) => {
                     </button>
                   );
                 })}
+              {friend?.length === 0 && (
+                <p className="text-white text-sm">
+                  You don't have any friends yet.
+                </p>
+              )}
             </div>
           )}
           {tab === "user" && (
