@@ -29,7 +29,7 @@ const AppRoute = () => {
   return (
     <SocketContext.Provider value={socket}>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/chat" element={<Chat />} />
       </Routes>

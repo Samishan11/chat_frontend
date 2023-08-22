@@ -12,6 +12,8 @@ const Chat = () => {
   const auth = getToken();
   const bottomRef = useRef(null);
 
+  const [openchat, setopenchat] = useState(false);
+
   const [data, setData] = useState();
   const [room, setRoom] = useState();
   const [messages, setMessages] = useState([]);
@@ -21,11 +23,9 @@ const Chat = () => {
 
   //  react query
   const { data: _room, isLoading } = useRoomQuery(users);
-  console.log(_room);
   const { data: chat, isLoading: isLoadingChat } = useListChat(
     _room?._id ?? room
   );
-  console.log(chat);
 
   // set chat list
   useEffect(() => {
@@ -41,6 +41,8 @@ const Chat = () => {
 
   //  method set receiver info
   const handleUser = (data) => {
+    if (!data) return;
+    setopenchat(true);
     setData(data);
   };
 
@@ -95,43 +97,51 @@ const Chat = () => {
       <div className="flex h-screen antialiased text-gray-800">
         <div className="flex flex-row h-full w-full overflow-x-hidden">
           <Sidebar click={handleUser} />
-          <div className="flex  flex-col flex-auto h-full p-6">
-            {chat && messages?.length > 0 && _room ? (
+          {openchat ? (
+            <div className="flex  flex-col flex-auto h-full p-6">
               <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
-                <div className="flex flex-col h-full overflow-x-auto mb-4">
-                  <div className="flex flex-col h-full">
-                    <div className="grid grid-cols-12 gap-y-2">
-                      {/*  right chat */}
-                      {messages?.map((chat: any, ind: number) => (
-                        <div
-                          key={ind}
-                          className={`${
-                            chat?.messageBy === auth?._id
-                              ? "col-start-6 col-end-13 p-3 rounded-lg flex justify-end" // Align to the right
-                              : "col-start-1 col-end-8 p-3 rounded-lg flex justify-start" // Align to the left
-                          }`}
-                        >
-                          <div className="flex items-center">
-                            <div className="flex mx-1 items-center justify-center h-10 w-10 rounded-full text-gray-50 bg-indigo-500 flex-shrink-0">
-                              {chat?.messageBy === auth?._id
-                                ? auth.username.slice(0, 1).toUpperCase()
-                                : data?.username.slice(0, 1).toUpperCase()}
-                            </div>
-                            <div
-                              className={`relative mr-3 text-sm py-2 px-4 shadow rounded-xl ${
-                                chat?.messageBy === auth?._id
-                                  ? "bg-indigo-100"
-                                  : "bg-gray-100"
-                              }`}
-                            >
-                              <div className="">{chat.message}</div>
+                {chat && messages?.length > 0 ? (
+                  <div className="flex flex-col h-full overflow-x-auto mb-4">
+                    <div className="flex flex-col h-full">
+                      <div className="grid grid-cols-12 gap-y-2">
+                        {/*  right chat */}
+                        {messages?.map((chat: any, ind: number) => (
+                          <div
+                            key={ind}
+                            className={`${
+                              chat?.messageBy === auth?._id
+                                ? "col-start-6 col-end-13 p-3 rounded-lg flex justify-end" // Align to the right
+                                : "col-start-1 col-end-8 p-3 rounded-lg flex justify-start" // Align to the left
+                            }`}
+                          >
+                            <div className="flex items-center">
+                              <div className="flex mx-1 items-center justify-center h-10 w-10 rounded-full text-gray-50 bg-indigo-500 flex-shrink-0">
+                                {chat?.messageBy === auth?._id
+                                  ? auth.username.slice(0, 1).toUpperCase()
+                                  : data?.username.slice(0, 1).toUpperCase()}
+                              </div>
+                              <div
+                                className={`relative mr-3 text-sm py-2 px-4 shadow rounded-xl ${
+                                  chat?.messageBy === auth?._id
+                                    ? "bg-indigo-100"
+                                    : "bg-gray-100"
+                                }`}
+                              >
+                                <div className="">{chat.message}</div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="flex justify-center items-center h-full">
+                    <h3 className="text-xl font-semibold">
+                      Start Conversation
+                    </h3>
+                  </div>
+                )}
 
                 <div className="flex">
                   <div className="flex-grow ml-4">
@@ -188,12 +198,12 @@ const Chat = () => {
                 </div>
                 <div ref={bottomRef} />
               </div>
-            ) : (
-              <div className="flex justify-center items-center h-full">
-                <h3 className="text-xl font-semibold">Start Conversation</h3>
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="flex justify-center items-center flex-col flex-auto h-screen p-6">
+              <h3 className="text-xl font-semibold">Start Conversation</h3>
+            </div>
+          )}
         </div>
       </div>
     </>

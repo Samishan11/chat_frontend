@@ -1,6 +1,6 @@
 import React from "react";
 
-const ListUser = ({ user, auth, socket }) => {
+const ListUser = ({ user, auth, socket, isOnline }) => {
   const sendRequest = (requestTo) => {
     if (!socket || !auth || !user) return;
     const data = {
@@ -9,6 +9,7 @@ const ListUser = ({ user, auth, socket }) => {
     };
     socket.emit("send-request", data);
   };
+
   return (
     <div>
       <div className="flex flex-col space-y-1 mt-4 -mx-2 h-screen overflow-y-auto">
@@ -16,7 +17,7 @@ const ListUser = ({ user, auth, socket }) => {
           return (
             <button
               key={ind}
-              className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
+              className="flex flex-row items-center mb-2 bg-gray-100 hover:bg-gray-200 rounded-xl p-2"
             >
               <div
                 onClick={() => sendRequest(user._id)}
