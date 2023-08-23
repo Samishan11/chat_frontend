@@ -21,11 +21,6 @@ const Indbox = ({ data }: any) => {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    const a = bottomEl?.current?.scrollIntoView({ behavior: "smooth" });
-    console.log(a);
-  };
-
   // set chat list
   useEffect(() => {
     if (isLoadingChat) return;
@@ -60,7 +55,6 @@ const Indbox = ({ data }: any) => {
     }
     reset({ message: "" });
     setMessages((prev) => [...prev, chatData]);
-    scrollToBottom();
   };
 
   const handleKeyDown = (event) => {
@@ -75,12 +69,15 @@ const Indbox = ({ data }: any) => {
     socket.on("message", (data) => {
       setMessages((prev) => [...prev, data]);
     });
+    return () => {
+      socket.off("message");
+    };
   }, [socket]);
 
   useScrollToBottom({ ref, messages });
 
   return (
-    <div className="flex  flex-col flex-auto h-full p-6">
+    <div className="flex flex-col flex-auto h-[96%] mt-10 p-6">
       <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
         {chat && messages?.length > 0 ? (
           <div className="flex flex-col h-full overflow-x-auto mb-4">
@@ -109,7 +106,6 @@ const Indbox = ({ data }: any) => {
                         />
                       </div>
                       <div className=" text-xs text-indigo-500 font-semibold">
-                        {console.log(chat?.messageBy === data?.request?._id)}
                         {data?.requestTo?._id === chat?.messageBy
                           ? data?.requestTo?.username
                           : data?.requestBy?.username}

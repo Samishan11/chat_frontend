@@ -6,6 +6,7 @@ import Chat from "../pages/chat/chat";
 import { SocketContext } from "../context/socket";
 import io from "socket.io-client";
 import { getToken } from "../service/token";
+import ProfilePicture from "../pages/profile/ProfilePicture";
 const AppRoute = () => {
   const user: any = getToken();
 
@@ -24,7 +25,7 @@ const AppRoute = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, []);
+  }, [user?._id]);
 
   return (
     <SocketContext.Provider value={socket}>
@@ -32,6 +33,7 @@ const AppRoute = () => {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/chat" element={<Chat />} />
+        <Route path="/profile" element={<ProfilePicture />} />
       </Routes>
     </SocketContext.Provider>
   );

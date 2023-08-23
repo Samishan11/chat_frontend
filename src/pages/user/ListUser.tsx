@@ -1,4 +1,5 @@
 import React from "react";
+import { BsPlus } from "react-icons/bs";
 
 const ListUser = ({ user, auth, socket }) => {
   const sendRequest = (requestTo) => {
@@ -22,9 +23,9 @@ const ListUser = ({ user, auth, socket }) => {
               >
                 <div
                   onClick={() => sendRequest(user._id)}
-                  className="flex relative items-center justify-center h-8 w-8 bg-indigo-200 rounded-full"
+                  className="flex relative items-center hover:scale-125 transition-all justify-center h-7 w-7 bg-indigo-200 rounded-full"
                 >
-                  +
+                  <BsPlus />
                 </div>
                 <div className="ml-2 text-sm font-semibold">
                   {user.fullname}

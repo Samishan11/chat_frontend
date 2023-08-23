@@ -4,7 +4,7 @@ const Toast = ({ type, message }: any) => {
   return type === "success"
     ? toast.success(message)
     : type === "error"
-    ? toast.success(message)
+    ? toast.error(message)
     : "";
 };
 
