@@ -5,16 +5,19 @@ import { useForm } from "react-hook-form";
 import { useListChat } from "../../../service/chat";
 import moment from "moment";
 import { useScrollToBottom } from "../../../hooks/useScrollToBottom";
+import { BsImageFill } from "react-icons/bs";
 const Indbox = ({ data }: any) => {
   const socket = useSocket();
   const auth: any = getToken();
+
+  const imageRef = useRef();
 
   //  states
   //  data requestBy , requestTo , roomId
   // const [emoji, setEmoji] = useState<any[]>([]);
   const [messages, setMessages] = useState([]);
-
   const { register, watch, reset } = useForm();
+  const [image, setImage] = useState();
 
   //  react query
   const { data: chat, isLoading: isLoadingChat } = useListChat(data?.roomId);
@@ -35,24 +38,22 @@ const Indbox = ({ data }: any) => {
 
   // send message
   const sendMessage = () => {
+    if (!data.roomId) return;
     const chat = watch().message;
     const chatData = {
       message: chat,
+      image: image ?? "",
       messageBy: auth?._id,
       messageTo:
         auth._id === data?.requestBy?._id
           ? data?.requestTo?._id
           : data?.requestBy?._id,
+      roomId: data?.roomId,
     };
-    if (!data.roomId) {
-      socket.emit("chat", {
-        data: chatData,
-      });
-    } else {
-      socket.emit("chat", {
-        data: { ...chatData, roomId: data?.roomId },
-      });
-    }
+
+    socket.emit("chat", {
+      data: chatData,
+    });
     reset({ message: "" });
     setMessages((prev) => [...prev, chatData]);
   };
@@ -76,9 +77,17 @@ const Indbox = ({ data }: any) => {
 
   useScrollToBottom({ ref, messages });
 
+  const handleImageChange = (event) => {
+    const selectedImage = event.target.files[0];
+    setImage(selectedImage);
+  };
+
+  console.log(messages);
+
   return (
     <div className="flex flex-col flex-auto h-[96%] mt-10 p-6">
       <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
+        {!messages && <span>loding...</span>}
         {chat && messages?.length > 0 ? (
           <div className="flex flex-col h-full overflow-x-auto mb-4">
             <div className="flex flex-col h-full">
@@ -112,15 +121,26 @@ const Indbox = ({ data }: any) => {
                         <span className="mx-1">
                           {moment(chat?.date).format("hh:mm")}
                         </span>
-                        <div
-                          className={`relative mr-3 mt-1 text-sm py-2 px-4 shadow rounded-xl ${
-                            chat?.messageBy === auth?._id
-                              ? "bg-indigo-100"
-                              : "bg-gray-100"
-                          }`}
-                        >
-                          {chat.message}
-                        </div>
+                        {chat?.message?.length > 0 && (
+                          <div
+                            className={`relative mr-3 mt-1 text-sm py-2 px-4 shadow rounded-xl ${
+                              chat?.messageBy === auth?._id
+                                ? "bg-indigo-100"
+                                : "bg-gray-100"
+                            }`}
+                          >
+                            {chat?.message}
+                          </div>
+                        )}
+                        {chat?.image && (
+                          <img
+                            src={
+                              `http://localhost:5000/uploaded_images/${chat?.image}` ||
+                              URL.createObjectURL(chat?.image?.name)
+                            }
+                            alt="Selected"
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
@@ -135,7 +155,11 @@ const Indbox = ({ data }: any) => {
           </div>
         )}
 
-        <div className="flex">
+        <div className="flex items-center">
+          <BsImageFill
+            onClick={() => imageRef.current.click()}
+            className="text-indigo-500 text-lg"
+          />
           <div className="flex-grow ml-4">
             <div className="relative w-full">
               {/* <InputEmoji
@@ -150,6 +174,13 @@ const Indbox = ({ data }: any) => {
                 name="message"
                 {...register("message")}
                 className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
+              />
+              <input
+                onChange={handleImageChange}
+                ref={imageRef}
+                id="image"
+                type="file"
+                className="hidden"
               />
               <button className="absolute flex items-center justify-center h-full w-12 right-0 top-0 text-gray-400 hover:text-gray-600">
                 <svg

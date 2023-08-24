@@ -13,7 +13,7 @@ const ListUser = ({ user, auth, socket }) => {
 
   return (
     <div>
-      <div className="flex flex-col space-y-1 mt-4 -mx-2 h-screen overflow-y-auto">
+      <div className="flex flex-col mt-4 h-screen overflow-y-auto">
         {user?.length > 0 &&
           user?.map((user: any, ind: number) => {
             return (
