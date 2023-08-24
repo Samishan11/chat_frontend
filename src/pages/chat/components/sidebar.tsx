@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useUserQuery } from "../../../service/auth";
 import { getToken } from "../../../service/token";
 import { useSocket } from "../../../context/socket";
 import ListUser from "../../user/ListUser";
 import FriendRequest from "../../request/FriendRequest";
 import { useListFriend } from "../../../service/request";
+import { BsTrash } from "react-icons/bs";
 
 const Sidebar = ({ click }: any) => {
   const { data } = useUserQuery();
@@ -38,6 +39,20 @@ const Sidebar = ({ click }: any) => {
     }
   };
 
+  //  show online user only
+
+  const onlineUser = useMemo(() => {
+    if (friend?.length === 0 || isOnline?.length === 0) return;
+    const onlineFriends = friend.filter((friend: any) =>
+      isOnline.includes(
+        friend.requestBy._id === auth?._id
+          ? friend.requestTo._id
+          : friend.requestBy._id
+      )
+    );
+    return onlineFriends;
+  }, [friend, isOnline, auth._id]);
+
   return (
     <div className="flex z-50 flex-col py-8 pl-6 pr-2 w-64 bg-indigo-500 border-r-2 rounded-sm flex-shrink-0  border-indigo-200">
       <div className="fixed">
@@ -64,19 +79,34 @@ const Sidebar = ({ click }: any) => {
           <div className="flex flex-row text-white items-center justify-between text-xs">
             <span
               onClick={() => handelTabs("active")}
-              className=" cursor-pointer font-bold"
+              className={`${
+                tab === "active"
+                  ? "decoration-[1.3px] underline underline-offset-[5px] cursor-pointer font-bold"
+                  : "cursor-pointer font-bold"
+              } relative`}
             >
               Active
+              <span className="absolute top-[-10px] rounded-full text-[.7re] bg-green-500 h-5 w-5 flex justify-center right-[-20px] items-center">
+                {onlineUser?.length}
+              </span>
             </span>
             <span
               onClick={() => handelTabs("user")}
-              className=" cursor-pointer font-bold"
+              className={`${
+                tab === "user"
+                  ? "decoration-[1.3px] underline underline-offset-[5px] cursor-pointer font-bold"
+                  : "cursor-pointer font-bold"
+              }`}
             >
               User
             </span>
             <span
               onClick={() => handelTabs("request")}
-              className=" cursor-pointer font-bold"
+              className={`${
+                tab === "request"
+                  ? " decoration-[1.3px] underline underline-offset-[5px] cursor-pointer font-bold"
+                  : "cursor-pointer font-bold"
+              }`}
             >
               Request
             </span>
@@ -85,8 +115,8 @@ const Sidebar = ({ click }: any) => {
           {tab === "active" && (
             <div className="flex flex-col space-y-1 mt-4 -mx-2 h-screen overflow-y-auto">
               {!isLoadingFriend &&
-                friend?.length > 0 &&
-                friend?.map((user: any, ind: number) => {
+                onlineUser?.length > 0 &&
+                onlineUser?.map((user: any, ind: number) => {
                   return (
                     <button
                       key={ind}
@@ -113,6 +143,7 @@ const Sidebar = ({ click }: any) => {
                           ? user?.requestTo?.fullname
                           : user?.requestBy?.fullname}
                       </div>
+                      <BsTrash className="text-red-400 mt-1 ml-2" />
                     </button>
                   );
                 })}

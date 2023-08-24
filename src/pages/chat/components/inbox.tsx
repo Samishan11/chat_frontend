@@ -82,6 +82,7 @@ const Indbox = ({ data }: any) => {
     setImage(selectedImage);
   };
 
+  console.log(image);
   console.log(messages);
 
   return (
@@ -102,7 +103,7 @@ const Indbox = ({ data }: any) => {
                         : "col-start-1 col-end-8 p-3 rounded-lg flex justify-start" // Align to the left
                     }`}
                   >
-                    <div className="flex items-center">
+                    <div className="flex items-start">
                       <div className="flex mx-1 items-center justify-center h-10 w-10 rounded-full text-gray-50 bg-indigo-500 flex-shrink-0">
                         <img
                           className="object-cover flex mx-1 items-center justify-center h-10 w-10 rounded-full text-gray-50 bg-indigo-500 flex-shrink-0"
@@ -119,8 +120,18 @@ const Indbox = ({ data }: any) => {
                           ? data?.requestTo?.username
                           : data?.requestBy?.username}
                         <span className="mx-1">
-                          {moment(chat?.date).format("hh:mm")}
+                          {moment(chat?.createdAt).format("hh:mm")}
                         </span>
+                        {chat?.image && (
+                          <img
+                            src={
+                              chat?.image?.name
+                                ? URL.createObjectURL(chat?.image)
+                                : `http://localhost:5000/uploaded_images/${chat?.image}`
+                            }
+                            alt="image"
+                          />
+                        )}
                         {chat?.message?.length > 0 && (
                           <div
                             className={`relative mr-3 mt-1 text-sm py-2 px-4 shadow rounded-xl ${
@@ -131,15 +142,6 @@ const Indbox = ({ data }: any) => {
                           >
                             {chat?.message}
                           </div>
-                        )}
-                        {chat?.image && (
-                          <img
-                            src={
-                              `http://localhost:5000/uploaded_images/${chat?.image}` ||
-                              URL.createObjectURL(chat?.image?.name)
-                            }
-                            alt="Selected"
-                          />
                         )}
                       </div>
                     </div>

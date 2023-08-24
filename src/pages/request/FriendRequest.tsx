@@ -12,11 +12,11 @@ const FriendRequest = ({ user, auth, socket }) => {
   };
 
   const { data } = useListRequest(auth?._id);
+
   return (
     <div>
       <div className="flex flex-col space-y-1 mt-4 -mx-2 h-screen overflow-y-auto">
         {data?.map((user: any, ind: number) => {
-          console.log(user);
           return (
             <button
               key={ind}
