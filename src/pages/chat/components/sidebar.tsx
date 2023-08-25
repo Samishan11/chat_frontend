@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useUserQuery } from "../../../service/auth";
 import { getToken } from "../../../service/token";
 import { useSocket } from "../../../context/socket";
 import ListUser from "../../user/ListUser";
 import FriendRequest from "../../request/FriendRequest";
 import { useListFriend } from "../../../service/request";
-import { BsTrash } from "react-icons/bs";
+// import { BsTrash } from "react-icons/bs";
 
 const Sidebar = ({ click }: any) => {
   const { data } = useUserQuery();
@@ -143,7 +143,7 @@ const Sidebar = ({ click }: any) => {
                           ? user?.requestTo?.fullname
                           : user?.requestBy?.fullname}
                       </div>
-                      <BsTrash className="text-red-400 mt-1 ml-2" />
+                      {/* <BsTrash className="text-red-400 mt-1 ml-2" /> */}
                     </button>
                   );
                 })}
