@@ -2,12 +2,15 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useLoginMutation } from "../../service/auth";
+import { useAuthData } from "../../context/auth.context";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
   const loginUser = useLoginMutation();
+  const { authData } = useAuthData();
+  console.log(authData);
   const submit = (data: IUser) => {
-    loginUser.mutate(data);
+    loginUser.mutate(data).then((res) => console.log(res));
   };
   return (
     <section className="bg-gray-50 dark:bg-gray-900">

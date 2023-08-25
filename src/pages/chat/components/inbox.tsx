@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useListChat } from "../../../service/chat";
 import moment from "moment";
 import { useScrollToBottom } from "../../../hooks/useScrollToBottom";
-import { BsImageFill } from "react-icons/bs";
+import { BsImageFill, BsXCircleFill } from "react-icons/bs";
 const Indbox = ({ data }: any) => {
   const socket = useSocket();
   const auth: any = getToken();
@@ -16,8 +16,10 @@ const Indbox = ({ data }: any) => {
   //  data requestBy , requestTo , roomId
   // const [emoji, setEmoji] = useState<any[]>([]);
   const [messages, setMessages] = useState([]);
+  const [image, setImage] = useState(null);
+
+  //  hook form
   const { register, watch, reset } = useForm();
-  const [image, setImage] = useState();
 
   //  react query
   const { data: chat, isLoading: isLoadingChat } = useListChat(data?.roomId);
@@ -54,6 +56,8 @@ const Indbox = ({ data }: any) => {
     socket.emit("chat", {
       data: chatData,
     });
+
+    setImage();
     reset({ message: "" });
     setMessages((prev) => [...prev, chatData]);
   };
@@ -82,13 +86,10 @@ const Indbox = ({ data }: any) => {
     setImage(selectedImage);
   };
 
-  console.log(image);
-  console.log(messages);
-
   return (
     <div className="flex flex-col flex-auto h-[96%] mt-10 p-6">
       <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
-        {!messages && <span>loding...</span>}
+        {!messages && <span>Loading...</span>}
         {chat && messages?.length > 0 ? (
           <div className="flex flex-col h-full overflow-x-auto mb-4">
             <div className="flex flex-col h-full">
@@ -171,12 +172,33 @@ const Indbox = ({ data }: any) => {
                     onEnter={handleOnEnter}
                     placeholder="Type a message"
                   /> */}
-              <input
-                type="text"
-                name="message"
-                {...register("message")}
-                className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
-              />
+
+              {image ? (
+                <div className="flex justify-around relative  flex-col w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-36">
+                  <img
+                    className="h-20  w-20 y-2"
+                    src={URL.createObjectURL(image)}
+                    alt=""
+                  />
+                  <BsXCircleFill
+                    onClick={() => setImage(null)}
+                    className="absolute top-2 text-white left-5 text-md"
+                  />
+                  <input
+                    type="text"
+                    name="message"
+                    {...register("message")}
+                    className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
+                  />
+                </div>
+              ) : (
+                <input
+                  type="text"
+                  name="message"
+                  {...register("message")}
+                  className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
+                />
+              )}
               <input
                 onChange={handleImageChange}
                 ref={imageRef}

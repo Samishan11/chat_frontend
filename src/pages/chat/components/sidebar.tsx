@@ -5,11 +5,12 @@ import { useSocket } from "../../../context/socket";
 import ListUser from "../../user/ListUser";
 import FriendRequest from "../../request/FriendRequest";
 import { useListFriend } from "../../../service/request";
-// import { BsTrash } from "react-icons/bs";
+import { useAuthData } from "../../../context/auth.context";
 
 const Sidebar = ({ click }: any) => {
+  const { authData } = useAuthData();
   const { data } = useUserQuery();
-  const auth = getToken();
+  const auth = getToken(authData);
   const { data: friend, isLoading: isLoadingFriend } = useListFriend(auth?._id);
   const socket = useSocket();
 

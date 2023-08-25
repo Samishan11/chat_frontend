@@ -3,6 +3,7 @@ import Toast from "../component/Toast";
 import { apiClient } from "./service.axios";
 import { setToken } from "./token";
 import { useNavigate } from "react-router-dom";
+import { useAuthData } from "../context/auth.context";
 
 const login = async ({ email, password }: string) => {
   const response = await apiClient.post<any>("/login", {
@@ -13,11 +14,12 @@ const login = async ({ email, password }: string) => {
 };
 
 export const useLoginMutation = () => {
+  const { authData, setAuthData } = useAuthData();
   const navigate = useNavigate();
   return useMutation(login, {
     onSuccess: (response) => {
-      console.log(response);
       setToken(response.data.token);
+      setAuthData(response.data.token);
       if (response.data.message === "User login sucessfully") {
         Toast({ type: "success", message: "Login Sucessfully" });
         navigate("/chat");

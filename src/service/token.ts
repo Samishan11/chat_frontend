@@ -1,6 +1,7 @@
 import jwtDecode from "jwt-decode";
+
 export const setToken = (data: any) => {
-  return localStorage.setItem("token", JSON.stringify(data));
+  localStorage.setItem("token", JSON.stringify(data));
 };
 export let token = "";
 try {
@@ -9,9 +10,9 @@ try {
   console.log(error);
 }
 
-export const getToken = () => {
+export const getToken = (data: any) => {
   try {
-    const decode = jwtDecode(token);
+    const decode = jwtDecode(data ? data : token);
     return decode.data;
   } catch (error) {
     console.log(error);

@@ -7,10 +7,13 @@ import { SocketContext } from "../context/socket";
 import io from "socket.io-client";
 import { getToken } from "../service/token";
 import ProfilePicture from "../pages/profile/ProfilePicture";
+import { AuthContext } from "../context/auth.context";
 const AppRoute = () => {
+  
   const user: any = getToken();
 
   const [socket, setSocket] = React.useState();
+  const [authData, setAuthData] = React.useState<any>();
 
   React.useEffect(() => {
     if (!user) return;
@@ -27,15 +30,27 @@ const AppRoute = () => {
     };
   }, [user?._id]);
 
+  React.useEffect(() => {
+    try {
+      const token = JSON.parse(localStorage.getItem("token"));
+      if (!token) return;
+      setAuthData(token);
+    } catch (error) {
+      console.log("first");
+    }
+  }, []);
+
   return (
-    <SocketContext.Provider value={socket}>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/profile" element={<ProfilePicture />} />
-      </Routes>
-    </SocketContext.Provider>
+    <AuthContext.Provider value={{ authData, setAuthData }}>
+      <SocketContext.Provider value={socket}>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/profile" element={<ProfilePicture />} />
+        </Routes>
+      </SocketContext.Provider>
+    </AuthContext.Provider>
   );
 };
 
