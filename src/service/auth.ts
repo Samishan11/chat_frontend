@@ -5,7 +5,7 @@ import { setToken } from "./token";
 import { useNavigate } from "react-router-dom";
 import { useAuthData } from "../context/auth.context";
 
-const login = async ({ email, password }: string) => {
+const login = async ({ email, password }: any) => {
   const response = await apiClient.post<any>("/login", {
     email,
     password,
@@ -15,8 +15,10 @@ const login = async ({ email, password }: string) => {
 
 export const useLoginMutation = () => {
   const { authData, setAuthData } = useAuthData();
+  console.log(authData);
   const navigate = useNavigate();
-  return useMutation(login, {
+  return useMutation({
+    mutationFn: login,
     onSuccess: (response) => {
       setToken(response.data.token);
       setAuthData(response.data.token);
@@ -26,15 +28,14 @@ export const useLoginMutation = () => {
       } else {
         Toast({ type: "error", message: "Email or password not match." });
       }
-      return response;
     },
     onError: () => {
-      Toast("error", "Something ent wrong");
+      Toast({ type: "error", message: "Something ent wrong" });
     },
   });
 };
 
-const register = async ({ username, fullname, email, password }: string) => {
+const register = async ({ username, fullname, email, password }: any) => {
   const response = await apiClient.post<any>("/register", {
     email,
     password,
@@ -46,13 +47,14 @@ const register = async ({ username, fullname, email, password }: string) => {
 };
 
 export const useRegisterMutation = () => {
-  return useMutation(register, {
-    onSuccess: (response) => {
+  return useMutation({
+    mutationFn: register,
+    onSuccess: () => {
       Toast({ type: "success", message: "User register sucessfully" });
-      return response;
+      // return response;
     },
     onError: () => {
-      Toast("error", "Something ent wrong");
+      Toast({ type: "error", message: "Something ent wrong" });
     },
   });
 };

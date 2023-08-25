@@ -1,8 +1,7 @@
-import React from "react";
 import { useListRequest } from "../../service/request";
 
-const FriendRequest = ({ user, auth, socket }) => {
-  const acceptRequest = (requestBy) => {
+const FriendRequest = ({ user, auth, socket }: any) => {
+  const acceptRequest = (requestBy: any) => {
     if (!socket || !auth || !user) return;
     const data = {
       requestBy,

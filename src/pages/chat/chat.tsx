@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Sidebar from "./components/sidebar";
 import Indbox from "./components/inbox";
 import Navbar from "../../component/Navbar";
@@ -7,7 +7,7 @@ const Chat = () => {
   const [openchat, setopenchat] = useState<boolean>(false);
   const [data, setData] = useState<any>();
   //  method set receiver info
-  const handleUser = (data) => {
+  const handleUser = (data: any) => {
     if (!data) return;
     setopenchat(true);
     setData(data);

@@ -1,8 +1,14 @@
-import React from "react";
+import { FC } from "react";
 import { BsPlus } from "react-icons/bs";
-
-const ListUser = ({ user, auth, socket }) => {
-  const sendRequest = (requestTo) => {
+import { Socket } from "socket.io-client";
+type IProps = {
+  user: any;
+  auth: any;
+  socket: Socket | null;
+};
+const ListUser: FC<IProps> = ({ user, auth, socket }) => {
+  const sendRequest = (requestTo: any) => {
+    console.log(socket);
     if (!socket || !auth || !user) return;
     const data = {
       requestBy: auth._id,

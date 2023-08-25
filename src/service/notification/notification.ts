@@ -26,7 +26,7 @@ export const useClearNotification = () => {
       return response;
     },
     onError: () => {
-      Toast("error", "Something ent wrong");
+      Toast({type:"error", message:"Something ent wrong"});
     },
   });
 };

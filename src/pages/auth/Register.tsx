@@ -1,18 +1,18 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useRegisterMutation } from "../../service/auth";
 
-type IUser = {
-  username: string;
-  fullname: string;
-  email: string;
-  password: string;
-};
+// type IUser = {
+//   username: string;
+//   fullname: string;
+//   email: string;
+//   password: string;
+// };
+
 const Register = () => {
   const { register, handleSubmit } = useForm();
   const registeruser = useRegisterMutation();
-  const submit = (data: IUser) => {
+  const submit = (data: any) => {
     registeruser.mutate(data);
   };
   return (
@@ -35,70 +35,62 @@ const Register = () => {
             >
               <div>
                 <label
-                  for="email"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Full Name
                 </label>
                 <input
                   type="text"
-                  name="fullname"
                   {...register("fullname")}
                   id="fullname"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="fullname"
-                  required=""
+                  required
                 />
               </div>
               <div>
                 <label
-                  for="email"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Username
                 </label>
                 <input
                   type="text"
-                  name="username"
                   {...register("username")}
                   id="username"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="username"
-                  required=""
+                  required
                 />
               </div>
               <div>
                 <label
-                  for="email"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Your email
                 </label>
                 <input
                   type="email"
-                  name="email"
                   {...register("email")}
                   id="email"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="name@company.com"
-                  required=""
+                  required
                 />
               </div>
               <div>
                 <label
-                  for="password"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Password
                 </label>
                 <input
                   type="password"
-                  name="password"
                   id="password"
                   {...register("password")}
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required=""
+                  required
                 />
               </div>
               <button

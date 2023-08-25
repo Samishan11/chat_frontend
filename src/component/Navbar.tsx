@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BsFillBellFill } from "react-icons/bs";
 import Notification from "./Notification";
 import { useSocket } from "../context/socket";
@@ -9,7 +9,7 @@ import {
 import { getToken } from "../service/token";
 
 const Navbar = () => {
-  const socket = useSocket();
+  const { socket } = useSocket();
   const auth = getToken();
   //  state hook
   const [open, setOpen] = useState<boolean>(false);

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useUserQuery } from "../../../service/auth";
 import { getToken } from "../../../service/token";
 import { useSocket } from "../../../context/socket";
@@ -12,13 +12,12 @@ const Sidebar = ({ click }: any) => {
   const { data } = useUserQuery();
   const auth = getToken(authData);
   const { data: friend, isLoading: isLoadingFriend } = useListFriend(auth?._id);
-  const socket = useSocket();
-
-  const [isOnline, setIsOnline] = useState([]);
+  const { socket } = useSocket();
+  const [isOnline, setIsOnline] = useState<any>([]);
 
   useEffect(() => {
     if (socket) {
-      socket.on("onlineUsers", (onlineUsers) => {
+      socket.on("onlineUsers", (onlineUsers: any) => {
         setIsOnline(onlineUsers);
       });
       return () => {
@@ -31,7 +30,7 @@ const Sidebar = ({ click }: any) => {
 
   const filter = useMemo(() => {
     if (!data) return [];
-    return data.filter((x) => x._id !== auth._id);
+    return data.filter((x: any) => x._id !== auth._id);
   }, [data, auth._id]);
 
   const handelTabs = (tab: string) => {
@@ -156,12 +155,7 @@ const Sidebar = ({ click }: any) => {
             </div>
           )}
           {tab === "user" && (
-            <ListUser
-              isOnline={isOnline}
-              socket={socket}
-              auth={auth}
-              user={filter}
-            />
+            <ListUser socket={socket} auth={auth} user={filter} />
           )}
           {tab === "request" && (
             <FriendRequest socket={socket} auth={auth} user={filter} />

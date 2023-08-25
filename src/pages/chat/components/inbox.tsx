@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSocket } from "../../../context/socket";
 import { getToken } from "../../../service/token";
 import { useForm } from "react-hook-form";
@@ -7,15 +7,15 @@ import moment from "moment";
 import { useScrollToBottom } from "../../../hooks/useScrollToBottom";
 import { BsImageFill, BsXCircleFill } from "react-icons/bs";
 const Indbox = ({ data }: any) => {
-  const socket = useSocket();
+  const { socket } = useSocket();
   const auth: any = getToken();
 
-  const imageRef = useRef();
+  const imageRef = useRef<HTMLInputElement>(null);
 
   //  states
   //  data requestBy , requestTo , roomId
   // const [emoji, setEmoji] = useState<any[]>([]);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any[]>([]);
   const [image, setImage] = useState(null);
 
   //  hook form
@@ -35,7 +35,7 @@ const Indbox = ({ data }: any) => {
   // event join room
   useEffect(() => {
     if (!data) return;
-    socket.emit("join_room", data.roomId);
+    socket?.emit("join_room", data.roomId);
   }, [data, socket]);
 
   // send message
@@ -53,16 +53,16 @@ const Indbox = ({ data }: any) => {
       roomId: data?.roomId,
     };
 
-    socket.emit("chat", {
+    socket?.emit("chat", {
       data: chatData,
     });
 
-    setImage();
+    setImage(null);
     reset({ message: "" });
     setMessages((prev) => [...prev, chatData]);
   };
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: any) => {
     if (event.key === "Enter") {
       sendMessage();
     }
@@ -71,8 +71,8 @@ const Indbox = ({ data }: any) => {
   //  get messsage
   useEffect(() => {
     if (!socket) return;
-    socket.on("message", (data) => {
-      setMessages((prev) => [...prev, data]);
+    socket.on("message", (data: any) => {
+      setMessages((prev: any[]) => [...prev, data]);
     });
     return () => {
       socket.off("message");
@@ -81,7 +81,7 @@ const Indbox = ({ data }: any) => {
 
   useScrollToBottom({ ref, messages });
 
-  const handleImageChange = (event) => {
+  const handleImageChange = (event: any) => {
     const selectedImage = event.target.files[0];
     setImage(selectedImage);
   };
@@ -160,7 +160,7 @@ const Indbox = ({ data }: any) => {
 
         <div className="flex items-center">
           <BsImageFill
-            onClick={() => imageRef.current.click()}
+            onClick={() => imageRef?.current?.click()}
             className="text-indigo-500 text-lg"
           />
           <div className="flex-grow ml-4">
@@ -186,7 +186,6 @@ const Indbox = ({ data }: any) => {
                   />
                   <input
                     type="text"
-                    name="message"
                     {...register("message")}
                     className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
                   />
@@ -194,7 +193,6 @@ const Indbox = ({ data }: any) => {
               ) : (
                 <input
                   type="text"
-                  name="message"
                   {...register("message")}
                   className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
                 />
@@ -208,7 +206,7 @@ const Indbox = ({ data }: any) => {
               />
               <button className="absolute flex items-center justify-center h-full w-12 right-0 top-0 text-gray-400 hover:text-gray-600">
                 <svg
-                  onClick={() => setOpneEmoji(!openEmoji)}
+                  // onClick={() => setOpneEmoji(!openEmoji)}
                   className="w-6 h-6"
                   fill="none"
                   stroke="currentColor"

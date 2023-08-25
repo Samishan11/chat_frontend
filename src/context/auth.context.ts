@@ -1,11 +1,13 @@
 import { createContext, useContext } from "react";
 
 export type IType = {
-  auth: any;
+  authData: any;
+  setAuthData: (data: any) => void;
 };
 
 export const AuthContext = createContext<IType>({
-  auth: null,
+  authData: null,
+  setAuthData: () => {},
 });
 
 export const useAuthData = () => useContext(AuthContext);

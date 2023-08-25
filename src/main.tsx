@@ -1,11 +1,9 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter } from "react-router-dom";
-import jwtDecode from "jwt-decode";
 import { token } from "./service/token.ts";
 import axios from "axios";
 const queryClient = new QueryClient();
@@ -13,9 +11,9 @@ const queryClient = new QueryClient();
 axios.interceptors.request.use(
   (config) => {
     if (!token) return config;
-    const auth = jwtDecode(token);
-    console.log(auth)
-    config.headers["Authorization"] = `Bearer ${token}`;
+    if (config.headers) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {
