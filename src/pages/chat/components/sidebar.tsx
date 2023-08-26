@@ -6,6 +6,7 @@ import ListUser from "../../user/ListUser";
 import FriendRequest from "../../request/FriendRequest";
 import { useListFriend } from "../../../service/request";
 import { useAuthData } from "../../../context/auth.context";
+import { BsX } from "react-icons/bs";
 
 const Sidebar = ({ click }: any) => {
   const { authData } = useAuthData();
@@ -40,18 +41,40 @@ const Sidebar = ({ click }: any) => {
   };
 
   //  show online user only
-
   const onlineUser = useMemo(() => {
-    if (friend?.length === 0 || isOnline?.length === 0) return;
-    const onlineFriends = friend.filter((friend: any) =>
-      isOnline.includes(
-        friend.requestBy._id === auth?._id
-          ? friend.requestTo._id
-          : friend.requestBy._id
-      )
-    );
-    return onlineFriends;
+    if (friend?.length > 0 || isOnline?.length > 0) {
+      const onlineFriends = friend?.filter((friend: any) =>
+        isOnline.includes(
+          friend.requestBy._id === auth?._id
+            ? friend.requestTo._id
+            : friend.requestBy._id
+        )
+      );
+      return onlineFriends;
+    }
+    return;
   }, [friend, isOnline, auth._id]);
+
+  //  handle delete friend
+
+  const handleDeleteFriend = (data: any) => {
+    if (!data) return;
+    const formatedData = {
+      user: auth?._id,
+      friend: data?.requestTo?._id,
+      roomId: data?.roomId,
+      id: data._id,
+    };
+    socket?.emit("remove-friend", formatedData);
+  };
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("get-friend", (data: any) => {
+        console.log(data);
+      });
+    }
+  }, [socket]);
 
   return (
     <div className="flex z-50 flex-col py-8 pl-6 pr-2 w-64 bg-indigo-500 border-r-2 rounded-sm flex-shrink-0  border-indigo-200">
@@ -121,29 +144,36 @@ const Sidebar = ({ click }: any) => {
                     <button
                       key={ind}
                       onClick={() => click(user)}
-                      className="flex flex-row items-center mb-2 bg-gray-100 hover:bg-gray-200 rounded-xl p-2"
+                      className="flex flex-row items-center justify-between mb-2 bg-gray-100 hover:bg-gray-200 rounded-xl p-2"
                     >
-                      <div className="flex relative items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
-                        {user?.requestBy?._id === auth?._id
-                          ? user?.requestTo?.fullname?.slice(0, 1).toUpperCase()
-                          : user?.requestBy?.fullname
-                              ?.slice(0, 1)
-                              .toUpperCase()}
-                        {isOnline?.length > 0 &&
-                          isOnline?.includes(
-                            user?.requestBy?._id === auth?._id
-                              ? user?.requestTo?._id
-                              : user?.requestBy?._id
-                          ) && (
-                            <span className="h-2 w-2 absolute right-0 top-0 rounded bg-green-600"></span>
-                          )}
+                      <div className="flex items-center">
+                        <div className="flex relative items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
+                          {user?.requestBy?._id === auth?._id
+                            ? user?.requestTo?.fullname
+                                ?.slice(0, 1)
+                                .toUpperCase()
+                            : user?.requestBy?.fullname
+                                ?.slice(0, 1)
+                                .toUpperCase()}
+                          {isOnline?.length > 0 &&
+                            isOnline?.includes(
+                              user?.requestBy?._id === auth?._id
+                                ? user?.requestTo?._id
+                                : user?.requestBy?._id
+                            ) && (
+                              <span className="h-2 w-2 absolute right-0 top-0 rounded bg-green-600"></span>
+                            )}
+                        </div>
+                        <div className=" text-sm ml-3 font-semibold">
+                          {user?.requestBy?._id === auth?._id
+                            ? user?.requestTo?.fullname
+                            : user?.requestBy?.fullname}
+                        </div>
                       </div>
-                      <div className="ml-2 text-sm font-semibold">
-                        {user?.requestBy?._id === auth?._id
-                          ? user?.requestTo?.fullname
-                          : user?.requestBy?.fullname}
-                      </div>
-                      {/* <BsTrash className="text-red-400 mt-1 ml-2" /> */}
+                      <BsX
+                        onClick={() => handleDeleteFriend(user)}
+                        className="text-red-500 font-black text-2xl mt-1"
+                      />
                     </button>
                   );
                 })}

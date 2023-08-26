@@ -14,6 +14,7 @@ const Navbar = () => {
   //  state hook
   const [open, setOpen] = useState<boolean>(false);
   const [notification, setNotification] = useState<any[]>([]);
+  const [count, setCount] = useState<number>();
   //  react query
   const { data } = useListNotification(auth?._id);
   const clear = useClearNotification();
@@ -22,14 +23,23 @@ const Navbar = () => {
   useEffect(() => {
     if (!data) return;
     setNotification(data?.data);
+    setCount(data?.count);
   }, [data]);
 
   useEffect(() => {
-    if (!socket) return;
-    socket.on("get-notification", (data: any) => {
-      setNotification((prev) => [...prev, data?.data]);
-    });
-  }, [socket]);
+    if (socket && count) {
+      const handleNotification = (notiData: any) => {
+        setNotification((prev) => [...prev, notiData?.data]);
+        setCount(count + 1);
+      };
+
+      socket.on("get-notification", handleNotification);
+
+      return () => {
+        socket.off("get-notification", handleNotification);
+      };
+    }
+  }, [socket, data?.count, count]);
 
   //  methods
   const handleClearNotification = (data: number[]) => {
@@ -52,7 +62,7 @@ const Navbar = () => {
         className="flex relative justify-end items-center h-14 px-4 text-white"
       >
         <span className="absolute text-xs bottom-auto left-auto bg-red-500 h-5 w-5 overflow-hidden rounded-full z-10 flex justify-center items-center top-1 right-1">
-          {data?.count}
+          {count}
         </span>
         <BsFillBellFill />
         {open && <Notification notification={notification} />}
