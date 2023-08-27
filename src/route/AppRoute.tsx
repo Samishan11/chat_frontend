@@ -17,7 +17,7 @@ const AppRoute = () => {
   React.useEffect(() => {
     if (!user) return;
 
-    const socket: Socket = io(import.meta.env.VITE_BACKEND, {
+    const socket: Socket = io("https://chat-frontend-indol.vercel.app", {
       query: {
         userId: user?._id,
       },
