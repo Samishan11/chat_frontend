@@ -28,7 +28,12 @@ const AppRoute = () => {
     };
   }, [user?._id]);
 
-  const token: string = JSON.parse(localStorage?.getItem("token") ?? "");
+  let token: string = "";
+  try {
+    token = JSON.parse(localStorage?.getItem("token") ?? "");
+  } catch (error: any) {
+    console.log(error.message);
+  }
 
   React.useEffect(() => {
     try {
