@@ -8,7 +8,6 @@ type IProps = {
 };
 const ListUser: FC<IProps> = ({ user, auth, socket }) => {
   const sendRequest = (requestTo: any) => {
-    console.log(socket);
     if (!socket || !auth || !user) return;
     const data = {
       requestBy: auth._id,

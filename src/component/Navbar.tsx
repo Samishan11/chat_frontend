@@ -27,10 +27,11 @@ const Navbar = () => {
   }, [data]);
 
   useEffect(() => {
-    if (socket && count) {
+    if (socket) {
       const handleNotification = (notiData: any) => {
-        setNotification((prev) => [...prev, notiData?.data]);
-        setCount(count + 1);
+        console.log(notiData);
+        setNotification((prev) => [...prev, notiData]);
+        setCount(count ?? 0 + 1);
       };
 
       socket.on("get-notification", handleNotification);
@@ -39,7 +40,7 @@ const Navbar = () => {
         socket.off("get-notification", handleNotification);
       };
     }
-  }, [socket, data?.count, count]);
+  }, [socket, count]);
 
   //  methods
   const handleClearNotification = (data: number[]) => {

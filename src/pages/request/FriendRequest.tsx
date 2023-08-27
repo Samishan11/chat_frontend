@@ -28,7 +28,7 @@ const FriendRequest = ({ user, auth, socket }: any) => {
                 {user?.requestBy?.fullname}
               </div>
               <button
-                onClick={() => acceptRequest(user.requestBy)}
+                onClick={() => acceptRequest(user.requestBy?._id)}
                 className="ml-2 text-sm rounded px-2 py-1 text-gray-50 bg-blue-400 font-semibold"
               >
                 Accept

@@ -10,11 +10,21 @@ import { BsX } from "react-icons/bs";
 
 const Sidebar = ({ click }: any) => {
   const { authData } = useAuthData();
-  const { data } = useUserQuery();
-  const auth = getToken(authData);
-  const { data: friend, isLoading: isLoadingFriend } = useListFriend(auth?._id);
   const { socket } = useSocket();
+  const auth = getToken(authData);
+  //  states
   const [isOnline, setIsOnline] = useState<any>([]);
+  const [friend, setFriend] = useState<any>([]);
+
+  const { data } = useUserQuery();
+  const { data: listFriend, isLoading: isLoadingFriend } = useListFriend(
+    auth?._id
+  );
+
+  useEffect(() => {
+    if (!listFriend) return;
+    setFriend(listFriend);
+  }, [listFriend]);
 
   useEffect(() => {
     if (socket) {
@@ -30,9 +40,9 @@ const Sidebar = ({ click }: any) => {
   const [tab, setTab] = useState("active");
 
   const filter = useMemo(() => {
-    if (!data) return [];
-    return data.filter((x: any) => x._id !== auth._id);
-  }, [data, auth._id]);
+    if (!data || !auth._id) return [];
+    return data.filter((x: any) => x._id !== auth?._id);
+  }, [data, auth?._id]);
 
   const handelTabs = (tab: string) => {
     if (tab) {
@@ -42,7 +52,7 @@ const Sidebar = ({ click }: any) => {
 
   //  show online user only
   const onlineUser = useMemo(() => {
-    if (friend?.length > 0 || isOnline?.length > 0) {
+    if (friend?.length > 0 || isOnline?.length > 0 || auth?._id) {
       const onlineFriends = friend?.filter((friend: any) =>
         isOnline.includes(
           friend.requestBy._id === auth?._id
@@ -70,8 +80,8 @@ const Sidebar = ({ click }: any) => {
 
   useEffect(() => {
     if (socket) {
-      socket.on("get-friend", (data: any) => {
-        console.log(data);
+      socket.on("get-friend", (friends: any) => {
+        setFriend(friends);
       });
     }
   }, [socket]);
@@ -166,13 +176,13 @@ const Sidebar = ({ click }: any) => {
                         </div>
                         <div className=" text-sm ml-3 font-semibold">
                           {user?.requestBy?._id === auth?._id
-                            ? user?.requestTo?.fullname
-                            : user?.requestBy?.fullname}
+                            ? user?.requestTo?.username.toUpperCase()
+                            : user?.requestBy?.username.toUpperCase()}
                         </div>
                       </div>
                       <BsX
                         onClick={() => handleDeleteFriend(user)}
-                        className="text-red-500 font-black text-2xl mt-1"
+                        className="text-white bg-red-500 rounded-full font-black text-xl mt-1"
                       />
                     </button>
                   );
