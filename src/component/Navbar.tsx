@@ -14,7 +14,7 @@ const Navbar = () => {
   //  state hook
   const [open, setOpen] = useState<boolean>(false);
   const [notification, setNotification] = useState<any[]>([]);
-  const [count, setCount] = useState<number>();
+  const [count, setCount] = useState<number>(0);
   //  react query
   const { data } = useListNotification(auth?._id);
   const clear = useClearNotification();
@@ -31,7 +31,7 @@ const Navbar = () => {
       const handleNotification = (notiData: any) => {
         console.log(notiData);
         setNotification((prev) => [...prev, notiData]);
-        setCount(count ?? 0 + 1);
+        setCount(count + 1);
       };
 
       socket.on("get-notification", handleNotification);

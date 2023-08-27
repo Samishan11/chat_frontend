@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useListRequest } from "../../service/request";
 
 const FriendRequest = ({ user, auth, socket }: any) => {
@@ -10,12 +11,32 @@ const FriendRequest = ({ user, auth, socket }: any) => {
     socket.emit("accept-request", data);
   };
 
+  const [request, setRequest] = useState<any[]>([]);
+
   const { data } = useListRequest(auth?._id);
+
+  useEffect(() => {
+    if (!data) return;
+    setRequest(data);
+  }, [data]);
+
+  useEffect(() => {
+    if (socket) {
+      const handleReuqest = (data: any) => {
+        setRequest(data);
+      };
+      socket.on("list-request", handleReuqest);
+
+      return () => {
+        socket.off("list-request", handleReuqest);
+      };
+    }
+  }, [socket]);
 
   return (
     <div>
       <div className="flex flex-col space-y-1 mt-4 -mx-2 h-screen overflow-y-auto">
-        {data?.map((user: any, ind: number) => {
+        {request?.map((user: any, ind: number) => {
           return (
             <button
               key={ind}

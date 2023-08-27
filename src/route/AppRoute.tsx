@@ -16,7 +16,7 @@ const AppRoute = () => {
   const [authData, setAuthData] = React.useState<any>();
   React.useEffect(() => {
     if (!user?._id) return;
-    const socket: Socket = io("https://chat-backend-zlsm.vercel.app", {
+    const socket: Socket = io(import.meta.env.VITE_BACKEND, {
       query: {
         userId: user?._id,
       },
