@@ -12,6 +12,7 @@ const AppRoute = () => {
 
   const [socket, setSocket] = React.useState<Socket | null>(null);
   const [authData, setAuthData] = React.useState<any>();
+  console.log("first");
   React.useEffect(() => {
     if (!user?._id) return;
     const socket: Socket = io(import.meta.env.VITE_BACKEND, {
