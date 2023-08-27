@@ -16,8 +16,7 @@ const AppRoute = () => {
   const [authData, setAuthData] = React.useState<any>();
   React.useEffect(() => {
     if (!user?._id) return;
-
-    const socket: Socket = io("https://chat-frontend-indol.vercel.app", {
+    const socket: Socket = io("https://chat-backend-zlsm.vercel.app", {
       query: {
         userId: user?._id,
       },
@@ -29,15 +28,16 @@ const AppRoute = () => {
     };
   }, [user?._id]);
 
+  const token: string = JSON.parse(localStorage?.getItem("token") ?? "");
+
   React.useEffect(() => {
     try {
-      const token: string = JSON.parse(localStorage?.getItem("token") ?? "");
       if (!token) return;
       setAuthData(token);
-    } catch (error) {
-      console.log("first");
+    } catch (error: any) {
+      console.log(error?.message);
     }
-  }, []);
+  }, [token]);
 
   return (
     <AuthContext.Provider value={{ authData, setAuthData }}>

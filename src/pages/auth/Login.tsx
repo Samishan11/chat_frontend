@@ -1,13 +1,11 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useLoginMutation } from "../../service/auth";
-import { useAuthData } from "../../context/auth.context";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
   const loginUser = useLoginMutation();
-  const { authData } = useAuthData();
-  console.log(authData);
+
   const submit = (data: any) => {
     loginUser.mutate(data);
   };

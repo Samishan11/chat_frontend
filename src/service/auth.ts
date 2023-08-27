@@ -14,8 +14,7 @@ const login = async ({ email, password }: any) => {
 };
 
 export const useLoginMutation = () => {
-  const { authData, setAuthData } = useAuthData();
-  console.log(authData);
+  const { setAuthData } = useAuthData();
   const navigate = useNavigate();
   return useMutation({
     mutationFn: login,
