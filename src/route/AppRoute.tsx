@@ -15,7 +15,7 @@ const AppRoute = () => {
   const [socket, setSocket] = React.useState<Socket | null>(null);
   const [authData, setAuthData] = React.useState<any>();
   React.useEffect(() => {
-    if (!user) return;
+    if (!user?._id) return;
 
     const socket: Socket = io("https://chat-frontend-indol.vercel.app", {
       query: {
