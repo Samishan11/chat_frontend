@@ -29,3 +29,4 @@ If you are developing a production application, we recommend updating the config
 - start server command  `npm run dev ` or `yarn run dev`
 - backend: `https://github.com/Samishan11/chat_backend.git`
 
+https://youtu.be/0Wv06gZsucM?si=jjYxWgj2lVPFSMin
