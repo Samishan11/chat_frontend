@@ -19,6 +19,10 @@ If you are developing a production application, we recommend updating the config
     sourceType: 'module',
     project: ['./tsconfig.json', './tsconfig.node.json'],
     tsconfigRootDir: __dirname,
+
+https://github.com/Samishan11/chat_frontend/assets/60726548/2b14d0cc-d66b-4243-8756-952ee7b8f928
+
+
    },
 ```
 
