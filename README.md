@@ -27,4 +27,5 @@ If you are developing a production application, we recommend updating the config
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
 - build command `npm installl` or  `yarn`
 - start server command  `npm run dev ` or `yarn run dev`
+- backend: `https://github.com/Samishan11/chat_backend.git`
 
