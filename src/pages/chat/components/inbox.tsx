@@ -88,8 +88,8 @@ const Indbox = ({ data }: any) => {
 
   return (
     <div className="flex flex-col flex-auto h-[96%] mt-10 p-6">
-      <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100">
-        <div className=" bg-indigo-500 max-h-20 w-ful flex p-3 items-center">
+      <div className="flex flex-col flex-auto  flex-shrink-0 rounded-2xl bg-gray-100">
+        <div className=" bg-indigo-500 rounded-t-lg max-h-20 w-ful flex p-3 items-center">
           <div className="flex relative items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
             {auth._id === data?.requestBy?._id
               ? data?.requestTo?.username.slice(0, 1).toUpperCase()

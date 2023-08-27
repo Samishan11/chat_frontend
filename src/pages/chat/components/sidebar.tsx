@@ -153,10 +153,12 @@ const Sidebar = ({ click }: any) => {
                   return (
                     <button
                       key={ind}
-                      onClick={() => click(user)}
                       className="flex flex-row items-center justify-between mb-2 bg-gray-100 hover:bg-gray-200 rounded-xl p-2"
                     >
-                      <div className="flex items-center">
+                      <div
+                        className="flex items-center"
+                        onClick={() => click(user)}
+                      >
                         <div className="flex relative items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
                           {user?.requestBy?._id === auth?._id
                             ? user?.requestTo?.fullname

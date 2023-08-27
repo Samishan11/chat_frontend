@@ -4,10 +4,8 @@ import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import Chat from "../pages/chat/chat";
 import { SocketContext } from "../context/socket";
-// import io from "socket.io-client";
 import io, { Socket } from "socket.io-client";
 import { getToken } from "../service/token";
-import ProfilePicture from "../pages/profile/ProfilePicture";
 import { AuthContext } from "../context/auth.context";
 const AppRoute = () => {
   const user: any = getToken();
@@ -51,7 +49,6 @@ const AppRoute = () => {
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/chat" element={<Chat />} />
-          <Route path="/profile" element={<ProfilePicture />} />
         </Routes>
       </SocketContext.Provider>
     </AuthContext.Provider>
