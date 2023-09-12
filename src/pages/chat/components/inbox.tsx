@@ -143,7 +143,7 @@ const Indbox = ({ data }: any) => {
                                 chat?.image?.name
                                   ? URL.createObjectURL(chat?.image)
                                   : `${
-                                      import.meta.env.VITE_BACKEND_URI
+                                      import.meta.env.VITE_BACKEND
                                     }/uploaded_images/${chat?.image}`
                               }
                               alt="image"
